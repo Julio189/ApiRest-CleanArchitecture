@@ -32,8 +32,8 @@ public class UsersController : ControllerBase
     {
         var result = await _userService.GetUserByIdAsync(id);
 
-        if(!result.IsSucess)
-            return BadRequest(result); 
+        if(!result.IsFound)
+            return NotFound(result.Message);
 
         return Ok(result.Data);
     }
@@ -43,7 +43,7 @@ public class UsersController : ControllerBase
     {
         var result = await _userService.CreateUserAsync(userDto);
 
-        if (!result.IsSucess)
+        if (!result.IsValid)
             return BadRequest(result);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
@@ -55,7 +55,10 @@ public class UsersController : ControllerBase
     {
         var result = await _userService.UpdateUserAsync(userDto);
 
-        if(!result.IsSucess)
+        if (!result.IsFound)
+            return NotFound(result);
+
+        if(!result.IsValid)
             return BadRequest(result);  
 
         return NoContent(); 
@@ -67,7 +70,10 @@ public class UsersController : ControllerBase
     {
         var result = await _userService.UpdatePasswordAsync(userDto);
 
-        if(!result.IsSucess)
+        if(!result.IsFound)
+            return NotFound(result);
+
+        if(!result.IsValid)
             return BadRequest(result); 
 
         return NoContent();
@@ -79,8 +85,8 @@ public class UsersController : ControllerBase
     {
         var result = await _userService.DeleteUserAsync(id);
 
-        if(!result.IsSucess)
-            return BadRequest(result);
+        if(!result.IsFound)
+            return NotFound(result);
 
         return NoContent();
     }

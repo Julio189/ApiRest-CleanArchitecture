@@ -31,7 +31,10 @@ public class PersonController : ControllerBase
     {
         var result = await _personService.GetPersonById(id);
 
-        if (!result.IsSucess)
+        if(!result.IsFound)
+            return NotFound(result);
+
+        if (!result.IsValid)
             return BadRequest(result);
 
         return Ok(result.Data);
@@ -41,19 +44,26 @@ public class PersonController : ControllerBase
     public async Task<ActionResult> Post([FromBody] CreatePersonDto createPersonDto)
     {
         var result = await _personService.CreatePersonAsync(createPersonDto);
-        if(!result.IsSucess)
+
+        if(!result.IsValid)
             return BadRequest(result);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
 
     }
 
-    [HttpPut]
-    public async Task<ActionResult> Put([FromBody] UpdatePersonDto updatePersonDto)
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put(int id, [FromBody] UpdatePersonDto updatePersonDto)
     {
+        if (id != updatePersonDto.Id)
+            return BadRequest("The id in the url does not match the id in the body!");
+
         var result = await _personService.UpdatePersonAsync(updatePersonDto);
 
-        if(!result.IsSucess)
+        if (!result.IsFound)
+            return NotFound(result);
+
+        if(!result.IsValid)
             return BadRequest(result);
 
         return NoContent();
@@ -64,7 +74,7 @@ public class PersonController : ControllerBase
     {
         var result = await _personService.DeletePersonAsync(id);
 
-        if(!result.IsSucess)
+        if(!result.IsFound)
             return NotFound(result);
 
         return NoContent();

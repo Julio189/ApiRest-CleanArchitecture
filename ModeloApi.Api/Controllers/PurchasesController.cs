@@ -30,8 +30,8 @@ public class PurchasesController : ControllerBase
     {
         var result = await _purchaseService.GetPurchaseByIdAsync(id);
 
-        if(!result.IsSucess)
-            return BadRequest(result);
+        if(!result.IsFound)
+            return NotFound(result);
 
         return Ok(result.Data);
     }
@@ -41,7 +41,7 @@ public class PurchasesController : ControllerBase
     {
         var result = await _purchaseService.CreatePurchaseAsync(purchaseDto);
 
-        if (!result.IsSucess)
+        if (!result.IsValid)
             return BadRequest(result);
 
         return CreatedAtAction(nameof(GetById), new {id = result.Data.Id}, result.Data);
@@ -52,7 +52,10 @@ public class PurchasesController : ControllerBase
     {
         var result = await _purchaseService.UpdatePurchaseAsync(purchaseDto);
 
-        if (!result.IsSucess)
+        if (!result.IsFound)
+            return NotFound(result);
+
+        if (!result.IsValid)
             return BadRequest(result);
 
         return NoContent();
@@ -63,8 +66,8 @@ public class PurchasesController : ControllerBase
     {
         var result = await _purchaseService.DeletePurchaseAsync(id);
 
-        if (!result.IsSucess)
-            return BadRequest(result);
+        if (!result.IsFound)
+            return NotFound(result);
 
         return NoContent();
     }

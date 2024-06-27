@@ -30,8 +30,8 @@ public class ProductsController : ControllerBase
     {
         var result = await _productService.GetProductByIdAsync(id);
 
-        if(!result.IsSucess)
-            return BadRequest(result);
+        if(!result.IsFound)
+            return NotFound(result);
 
         return Ok(result);
     }
@@ -41,18 +41,24 @@ public class ProductsController : ControllerBase
     {
         var result = await _productService.CreateProductAsync(productDto);
 
-        if (!result.IsSucess)
+        if (!result.IsValid)
             return BadRequest(result);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
     }
 
-    [HttpPut]
-    public async Task<ActionResult> Put([FromBody] UpdateProductDto productDto)
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put(int id, [FromBody] UpdateProductDto productDto)
     {
+        if (id != productDto.Id)
+            return BadRequest("The id in the url does not match the id in the body!");
+
         var result = await _productService.UpdateProductAsync(productDto);
 
-        if(!result.IsSucess)
+        if (!result.IsFound)
+            return NotFound(result);
+
+        if(!result.IsValid)
             return BadRequest(result);
 
         return NoContent();
@@ -63,8 +69,8 @@ public class ProductsController : ControllerBase
     {
         var result = await _productService.DeleteProductAsync(id);
 
-        if(!result.IsSucess)
-            return BadRequest(result);
+        if(!result.IsFound)
+            return NotFound(result);
 
         return NoContent();
     }
