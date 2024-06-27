@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,9 @@ using ModeloApi.Application.Services.Interfaces;
 using ModeloApi.Domain.Authentication;
 using ModeloApi.Domain.Interfaces;
 using ModeloApi.Infra.Data.Authentication;
+using ModeloApi.Infra.Data.Authentication.Interfaces;
 using ModeloApi.Infra.Data.Context;
+using ModeloApi.Infra.Data.Identity;
 using ModeloApi.Infra.Data.Repositories;
 
 namespace ModeloApi.Infra.IoC;
@@ -18,6 +21,12 @@ public static class DependencyInjection
     {
         services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("PostgressConexao"),
             b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+
+        services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
+        services.AddScoped<ITokenService, TokenService>();
 
         services.AddScoped<IPersonRepository, PersonRepository>();
         services.AddScoped<IPersonService, PersonService>();
