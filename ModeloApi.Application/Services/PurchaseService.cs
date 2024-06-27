@@ -32,7 +32,7 @@ public class PurchaseService : IPurchaseService
         var purchase = await _purchaseRepository.GetPurchaseByIdAsync(id);
 
         if (purchase == null)
-            return ResultService.Fail<ReadPurchaseDto>($"Purchase id {id} not found!");
+            return ResultService.NotFound<ReadPurchaseDto>($"Purchase id {id} not found!");
 
         return ResultService.Ok(_mapper.Map<ReadPurchaseDto>(purchase));
     }
@@ -79,14 +79,17 @@ public class PurchaseService : IPurchaseService
         var productId = await _productRepository.GetIdByCodErp(purchaseDto.CodErp);
 
         if (productId == 0)
-            return ResultService.Fail<ReadPurchaseDto>($"Product with cod erp {purchaseDto.CodErp} not found!");
+            return ResultService.NotFound($"Product with cod erp {purchaseDto.CodErp} not found!");
 
         var personId = await _personRepository.GetIdByDocument(purchaseDto.Document);
 
         if (personId == 0)
-            return ResultService.Fail<ReadPurchaseDto>($"Person with documento {purchaseDto.Document} not found!");
+            return ResultService.NotFound($"Person with documento {purchaseDto.Document} not found!");
 
         var purchaseEntity = await _purchaseRepository.GetPurchaseByIdAsync(purchaseDto.Id);
+
+        if (purchaseEntity == null)
+            return ResultService.NotFound($"Purchase id {purchaseDto.Id} not found!");
 
         purchaseEntity.Update(purchaseEntity.Id, productId, personId);
 
@@ -100,7 +103,7 @@ public class PurchaseService : IPurchaseService
         var purchase = await _purchaseRepository.GetPurchaseByIdAsync(id);
 
         if (purchase == null)
-            return ResultService.Fail($"Purchase id {id} not found!");
+            return ResultService.NotFound($"Purchase id {id} not found!");
 
         await _purchaseRepository.DeletePurchaseAsync(purchase);
 

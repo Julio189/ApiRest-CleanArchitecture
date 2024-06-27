@@ -29,7 +29,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetUserByIdAsync(id);
 
         if (user == null)
-            return ResultService.Fail<ReadUserDto>($"User id {id} not found!");
+            return ResultService.NotFound<ReadUserDto>($"User id {id} not found!");
 
         return ResultService.Ok(_mapper.Map<ReadUserDto>(user));
     }
@@ -73,7 +73,7 @@ public class UserService : IUserService
         var userEntity = await _userRepository.GetUserByIdAsync(userDto.Id);
 
         if (userEntity == null)
-            return ResultService.Fail($"User id {userDto.Id} not found!");
+            return ResultService.NotFound($"User id {userDto.Id} not found!");
 
         if(userEntity.Name != userDto.Name)
         {
@@ -105,7 +105,7 @@ public class UserService : IUserService
         var userEntity = await _userRepository.GetUserByIdAsync(userDto.Id);
 
         if (userEntity == null)
-            return ResultService.Fail($"User id {userDto.Id} not found!");
+            return ResultService.NotFound($"User id {userDto.Id} not found!");
 
         var password = BCrypt.Net.BCrypt.HashString(userDto.Password);
 
@@ -121,7 +121,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetUserByIdAsync(id);
 
         if (user == null)
-            return ResultService.Fail($"User id {id} not found!");
+            return ResultService.NotFound($"User id {id} not found!");
 
         return ResultService.Ok("User deleted!");
     }

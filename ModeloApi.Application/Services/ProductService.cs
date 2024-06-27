@@ -32,7 +32,7 @@ public class ProductService : IProductService
         var product = await _productRepository.GetProductByIdAsync(id);
 
         if (product == null)
-            return ResultService.Fail<ReadProductDto>($"Product id {id} not found!");
+            return ResultService.NotFound<ReadProductDto>($"Product id {id} not found!");
 
         return ResultService.Ok(_mapper.Map<ReadProductDto>(product));  
     }
@@ -76,7 +76,7 @@ public class ProductService : IProductService
         var productEntity = await _productRepository.GetProductByIdAsync(productDto.Id);
 
         if (productEntity == null)
-            return ResultService.Fail($"Product id {productDto.Id} not found!");
+            return ResultService.NotFound($"Product id {productDto.Id} not found!");
 
         if(productEntity.Name != productDto.Name)
         {
@@ -107,7 +107,7 @@ public class ProductService : IProductService
         var product = await _productRepository.GetProductByIdAsync(id);
 
         if (product == null)
-            return ResultService.Fail($"Product id {id} not found!");
+            return ResultService.NotFound($"Product id {id} not found!");
 
         await _productRepository.DeleteProductAsync(product);
 

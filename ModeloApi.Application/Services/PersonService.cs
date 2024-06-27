@@ -28,7 +28,7 @@ public class PersonService : IPersonService
     {
         var personEntity = await _personRepository.GetPersonByIdAsync(id);
         if (personEntity == null)
-            return ResultService.Fail<ReadPersonDto>($"Person id {id}, not found!");
+            return ResultService.NotFound<ReadPersonDto>($"Person id {id}, not found!");
         
         return ResultService.Ok(_mapper.Map<ReadPersonDto>(personEntity));
     }
@@ -73,7 +73,7 @@ public class PersonService : IPersonService
         var personEntity = await _personRepository.GetPersonByIdAsync(updatePersonDto.Id);
 
         if (personEntity == null)
-            return ResultService.Fail($"Person id {updatePersonDto.Id} not found!");
+            return ResultService.NotFound($"Person id {updatePersonDto.Id} not found!");
 
         if (personEntity.Document != updatePersonDto.Document)
         {
@@ -102,7 +102,7 @@ public class PersonService : IPersonService
         var personEntity = await _personRepository.GetPersonByIdAsync(id);
 
         if (personEntity == null)
-            return ResultService.Fail($"Person id {id} not found!");
+            return ResultService.NotFound($"Person id {id} not found!");
 
         await _personRepository.DeletePersonAsync(personEntity);
 

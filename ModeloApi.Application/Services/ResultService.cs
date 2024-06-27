@@ -1,10 +1,14 @@
 ﻿
 using FluentValidation.Results;
+using System.Text.Json.Serialization;
 
 namespace ModeloApi.Application.Services;
 public class ResultService
 {
-    public bool IsSucess { get; set; }
+    [JsonIgnore]
+    public bool IsValid { get; set; }
+    [JsonIgnore]
+    public bool IsFound { get; set; }
     public string? Message { get; set; }
     public ICollection<ErrorValidation>? Errors { get; set; }
 
@@ -12,7 +16,7 @@ public class ResultService
     {
         return new ResultService
         {
-            IsSucess = false,
+            IsValid = false,
             Message = null,
             Errors = validationResult.Errors.Select(x => new ErrorValidation
             {
@@ -26,7 +30,7 @@ public class ResultService
     {
         return new ResultService<T>
         {
-            IsSucess = false,
+            IsValid = false,
             Message = null,
             Errors = validationResult.Errors.Select(x => new ErrorValidation
             {
@@ -36,13 +40,17 @@ public class ResultService
         };
     }
 
-    public static ResultService Fail(string message) => new ResultService { IsSucess = false, Message = message };
+    public static ResultService Fail(string message) => new ResultService { IsValid = false, Message = message };
 
-    public static ResultService<T> Fail<T>(string message) => new ResultService<T> { IsSucess = false, Message = message };
+    public static ResultService<T> Fail<T>(string message) => new ResultService<T> { IsValid = false, Message = message };
+    
+    public static ResultService NotFound(string message) => new ResultService { IsFound = false, Message = message };
 
-    public static ResultService Ok(string message) => new ResultService { IsSucess = true, Message = message };
+    public static ResultService<T> NotFound<T>(string message) => new ResultService<T> { IsFound = false, Message = message };
 
-    public static ResultService<T> Ok<T>(T data) => new ResultService<T> { IsSucess = true, Data = data };
+    public static ResultService Ok(string message) => new ResultService { IsFound = true, IsValid = true ,Message = message };
+
+    public static ResultService<T> Ok<T>(T data) => new ResultService<T> { IsFound = true, IsValid = true, Data = data };
 
 }
 
