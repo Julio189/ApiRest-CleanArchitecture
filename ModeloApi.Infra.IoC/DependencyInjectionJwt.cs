@@ -18,6 +18,7 @@ public static class DependencyInjectionJwt
             opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer("Bearer", opt =>
         {
+            opt.SaveToken = true;
             opt.RequireHttpsMetadata = false;
             opt.TokenValidationParameters = new TokenValidationParameters
             {
