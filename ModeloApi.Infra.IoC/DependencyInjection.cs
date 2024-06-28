@@ -45,7 +45,6 @@ public static class DependencyInjection
 
         services.AddAutoMapper(typeof(DomainToDtoMappingProfile));
 
-
         return services;
     }
 }

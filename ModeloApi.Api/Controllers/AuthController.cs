@@ -93,21 +93,7 @@ public class AuthController : ControllerBase
         if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
             return BadRequest(ResultService.Fail("User or password is not correct!"));
 
-        var userRoles = await _userManager.GetRolesAsync(user);
-
-        var authClaims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-        foreach (var userRole in userRoles)
-        {
-            authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-        }
-
-        var token = _tokenService.GenerateAcessToken(authClaims, _configuration);
+        var token = _tokenService.GenerateAccessToken(user);
 
         var refreshToken = _tokenService.GenerateRefreshToken();
 
@@ -121,11 +107,12 @@ public class AuthController : ControllerBase
 
         return Ok(new
         {
-            Acess_token = new JwtSecurityTokenHandler().WriteToken(token),
+            Access_token = new JwtSecurityTokenHandler().WriteToken(token),
             RefreshToken = refreshToken,
             Expiration = token.ValidTo,
         });
     }
+
 
     [HttpPost]
     [Route("register")]
@@ -166,34 +153,36 @@ public class AuthController : ControllerBase
         if (tokenDto == null)
             return BadRequest(ResultService.Fail("Invalid client request!"));
 
-        string acessToken = tokenDto.AcessToken ?? throw new ArgumentNullException(nameof(tokenDto));
+        string accessToken = tokenDto.AcessToken ?? throw new ArgumentNullException(nameof(tokenDto));
 
         string refreshToken = tokenDto.RefreshToken ?? throw new ArgumentNullException(nameof(tokenDto));
 
-        var principal = _tokenService.GetPrincipalFromExpiredToken(acessToken, _configuration);
+        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
 
         if (principal == null)
-            return BadRequest(ResultService.Fail("Invalid acess token/refresh token!"));
+            return BadRequest(ResultService.Fail("Invalid access token/refresh token!"));
 
         string username = principal.Identity.Name;
 
         var user = await _userManager.FindByNameAsync(username);
 
-        if (user == null || user.Refreshtoken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-            return BadRequest(ResultService.Fail("Invalid acess token/refresh token!"));
+        if (user == null || user.Refreshtoken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            return BadRequest(ResultService.Fail("Invalid access token/refresh token!"));
 
-        var newAcessToken = _tokenService.GenerateAcessToken(principal.Claims.ToList(), _configuration);
+        var newAccessToken = _tokenService.GenerateAccessToken(user);
 
         var newRefreshToken = _tokenService.GenerateRefreshToken();
 
         user.Refreshtoken = newRefreshToken;
 
-        user.RefreshTokenExpiryTime = DateTime.Now;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JWT:RefreshToken"]));
+
+        await _userManager.UpdateAsync(user);
 
         return new ObjectResult(new
         {
-            acessToken = new JwtSecurityTokenHandler().WriteToken(newAcessToken),
-            refreshToken = newRefreshToken,
+            AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            RefreshToken = newRefreshToken,
         });
     }
 

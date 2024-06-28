@@ -1,14 +1,15 @@
 ﻿
 using Microsoft.Extensions.Configuration;
+using ModeloApi.Infra.Data.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace ModeloApi.Infra.Data.Authentication.Interfaces;
 public interface ITokenService
 {
-    JwtSecurityToken GenerateAcessToken(ICollection<Claim> claims, IConfiguration config);
+    JwtSecurityToken GenerateAccessToken(ApplicationUser user);
 
-    string GenerateRefreshToken();
+    public string GenerateRefreshToken();
 
-    ClaimsPrincipal GetPrincipalFromExpiredToken(string token, IConfiguration config);
+    ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
 }
