@@ -15,6 +15,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMvc().AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
 
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("SuperAdminOnly", policy => policy.RequireRole("SuperAdmin"));
+    opt.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    opt.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+});
+
 
 
 var app = builder.Build();
