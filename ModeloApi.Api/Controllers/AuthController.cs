@@ -30,6 +30,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("create-role")]
+    [Authorize(Policy = "Admin")]
     public async Task<ActionResult> CreateRole(RoleDto roleDto)
     {
         if (roleDto == null)
@@ -55,6 +56,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("user-to-role")]
+    [Authorize(Policy = "Admin")]
     public async Task<ActionResult> AddUserToRole(string email, string roleName)
     {
         var user = await _userManager.FindByEmailAsync(email);
@@ -148,6 +150,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("refresh-token")]
+    [Authorize(Policy = "SuperAdminOnly")]
     public async Task<ActionResult> RefreshToken(TokenDto tokenDto)
     {
         if (tokenDto == null)

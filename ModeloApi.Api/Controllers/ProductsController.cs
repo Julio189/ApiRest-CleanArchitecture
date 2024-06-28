@@ -65,6 +65,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> Delete(int id)
     {
         var result = await _productService.DeleteProductAsync(id);

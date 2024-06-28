@@ -18,8 +18,8 @@ builder.Services.AddMvc().AddJsonOptions(options => options.JsonSerializerOption
 builder.Services.AddAuthorization(opt =>
 {
     opt.AddPolicy("SuperAdminOnly", policy => policy.RequireRole("SuperAdmin"));
-    opt.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
-    opt.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+    opt.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    opt.AddPolicy("UserOnly", policy => policy.RequireRole("User", "Admin", "SuperAdmin"));
 });
 
 

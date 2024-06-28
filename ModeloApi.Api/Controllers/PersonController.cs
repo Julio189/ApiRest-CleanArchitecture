@@ -19,6 +19,7 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "UserOnly")]
     public async Task<ActionResult> GetAll()
     {
         var result = await _personService.GetAllPeopleAsync();
@@ -27,6 +28,7 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = "UserOnly")]
     public async Task<ActionResult> GetById(int id)
     {
         var result = await _personService.GetPersonById(id);
@@ -70,6 +72,7 @@ public class PersonController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> Delete(int id)
     {
         var result = await _personService.DeletePersonAsync(id);
