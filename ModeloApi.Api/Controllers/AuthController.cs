@@ -29,6 +29,54 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
+    [Route("create-role")]
+    public async Task<ActionResult> CreateRole(RoleDto roleDto)
+    {
+        if (roleDto == null)
+            return BadRequest(ResultService.Fail("Object not found!"));
+
+        var validate = new RoleDtoValidation().Validate(roleDto);
+
+        if (!validate.IsValid)
+            return BadRequest(ResultService.RequestError("Fields validate error!", validate));
+
+        var roleExists = await _roleManager.RoleExistsAsync(roleDto.Name);
+
+        if(roleExists)
+            return BadRequest(ResultService.Fail("Role already exists!"));
+
+        var role = await _roleManager.CreateAsync(new IdentityRole(roleDto.Name));
+
+        if (!role.Succeeded)
+            return BadRequest(ResultService.Fail("Erro adding new role"));
+
+        return Ok(ResultService.Ok($"Role {roleDto.Name} added sucessfully!"));
+    }
+
+    [HttpPost]
+    [Route("user-to-role")]
+    public async Task<ActionResult> AddUserToRole(string email, string roleName)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)
+            return BadRequest(ResultService.Fail($"User email {email} not found!"));
+
+        var role = await _roleManager.FindByNameAsync(roleName);
+
+        if (role == null)
+            return BadRequest(ResultService.Fail($"Role {roleName} not found!"));
+
+
+        var result = await _userManager.AddToRoleAsync(user, role.Name!);
+
+        if (!result.Succeeded)
+            return BadRequest(ResultService.Fail($"Unable to add user {user.Email} to role {role.Name}!"));
+
+        return Ok(ResultService.Ok("User add to role sucessufully!"));
+    }
+
+    [HttpPost]
     [Route("login")]
     public async Task<ActionResult> Login([FromBody] IdentityLoginDto loginDto)
     {
@@ -43,7 +91,7 @@ public class AuthController : ControllerBase
         var user = await _userManager.FindByNameAsync(loginDto.UserName);
 
         if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
-            return Unauthorized();
+            return BadRequest(ResultService.Fail("User or password is not correct!"));
 
         var userRoles = await _userManager.GetRolesAsync(user);
 
