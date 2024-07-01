@@ -1,8 +1,7 @@
 ﻿
 using FluentValidation;
-using ModeloApi.Application.DTOs.AuthenticationDtos;
 
-namespace ModeloApi.Application.DTOs.Validation.AuthenticationDtos;
+namespace ModeloApi.Infra.Data.Authentication.AuthDtos.Validation;
 public class RoleDtoValidation : AbstractValidator<RoleDto>
 {
     public RoleDtoValidation()

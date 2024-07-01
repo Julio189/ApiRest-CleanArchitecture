@@ -1,6 +1,6 @@
 ﻿
-namespace ModeloApi.Application.DTOs.AuthenticationDtos;
-public class IdentityRegisterDto
+namespace ModeloApi.Infra.Data.Authentication.AuthDtos;
+public class RegisterDto
 {
     public string UserName { get; set; }
     public string Email { get; set; }

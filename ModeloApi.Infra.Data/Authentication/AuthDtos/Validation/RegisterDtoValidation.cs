@@ -1,11 +1,10 @@
 ﻿
 using FluentValidation;
-using ModeloApi.Application.DTOs.AuthenticationDtos;
 
-namespace ModeloApi.Application.DTOs.Validation.AuthenticationDtos;
-public class IdentityRegisterDtoValidation : AbstractValidator<IdentityRegisterDto>
+namespace ModeloApi.Infra.Data.Authentication.AuthDtos.Validation;
+public class RegisterDtoValidation : AbstractValidator<RegisterDto>
 {
-    public IdentityRegisterDtoValidation()
+    public RegisterDtoValidation()
     {
         RuleFor(x => x.UserName)
             .NotEmpty()
