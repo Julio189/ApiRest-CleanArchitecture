@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,10 +37,10 @@ public static class DependencyInjectionSwagger
             };
             c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securitySchema);
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {securitySchema, new string[]{} }
-    });
+            {
+                {securitySchema, new string[]{} }
+            });
         });
-        return services;
+            return services;
     }
 }
