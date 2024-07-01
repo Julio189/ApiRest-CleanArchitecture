@@ -17,8 +17,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("create-role")]
-    [Authorize]
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> CreateRole([FromBody] RoleDto roleDto)
     {
         var result = await _authService.CreateRole(roleDto);
@@ -31,8 +30,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("user-to-role")]
-    [Authorize]
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult> AddUserToRole(string email, string roleName)
     {
         var result = await _authService.AddUserToRole(email, roleName);
@@ -70,7 +68,6 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("refresh-token")]
-    [Authorize]
     [Authorize(Policy = "SuperAdminOnly")]
     public async Task<ActionResult> RefreshToken(TokenDto tokenDto)
     {
@@ -82,9 +79,9 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
     [HttpPost]
     [Route("revoke/{username}")]
+    [Authorize]
     public async Task<ActionResult> Revoke(string username)
     {
         var result = await _authService.Revoke(username);
