@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModeloApi.Infra.IoC", "Mode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModeloApi.Api", "ModeloApi.Api\ModeloApi.Api.csproj", "{48745A24-75E9-4DFA-B7CB-64E4D21655E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModeloApi.Domain.Tests", "ModeloApi.Domain.Tests\ModeloApi.Domain.Tests.csproj", "{9730F1C1-BFBB-421F-94CB-51D23A885D46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModeloApi.Tests", "ModeloApi.Tests\ModeloApi.Tests.csproj", "{69F6C5B7-120D-4AFB-A01A-6EBA3D41D623}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{48745A24-75E9-4DFA-B7CB-64E4D21655E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48745A24-75E9-4DFA-B7CB-64E4D21655E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48745A24-75E9-4DFA-B7CB-64E4D21655E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9730F1C1-BFBB-421F-94CB-51D23A885D46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9730F1C1-BFBB-421F-94CB-51D23A885D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9730F1C1-BFBB-421F-94CB-51D23A885D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9730F1C1-BFBB-421F-94CB-51D23A885D46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69F6C5B7-120D-4AFB-A01A-6EBA3D41D623}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69F6C5B7-120D-4AFB-A01A-6EBA3D41D623}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69F6C5B7-120D-4AFB-A01A-6EBA3D41D623}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69F6C5B7-120D-4AFB-A01A-6EBA3D41D623}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
